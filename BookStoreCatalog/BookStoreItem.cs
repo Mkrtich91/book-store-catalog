@@ -65,18 +65,15 @@ namespace BookStoreCatalog
 #pragma warning disable CA1307
             if (priceString.Contains(','))
             {
-            formattedPrice = $"\"{formattedPrice}\"";
+                formattedPrice = $"\"{formattedPrice}\"";
             }
 #pragma warning restore CA1307
 
-            if (this.Publication.Author.HasIsni)
-            {
-                return $"{this.Publication.Title} by {this.Publication.Author}, {formattedPrice}, {this.Amount}";
-            }
-            else
-            {
-                return $"{this.Publication.Title} by {this.Publication.Author}, {formattedPrice}, {this.Amount}";
-            }
+            string authorString = this.Publication.Author.HasIsni ? this.Publication.Author.ToString() : this.publication.Author.ToString();
+
+            string amountString = this.Amount.ToString(CultureInfo.InvariantCulture);
+
+            return $"{this.Publication.Title} by {authorString}, {formattedPrice}, {amountString}";
         }
     }
 }
