@@ -1,39 +1,87 @@
 ﻿namespace BookStoreCatalog
 {
-    /// <summary>
-    /// Represents an International Standard Book Number (ISBN).
-    /// </summary>
-    // TODO Add class declaration.
+    public class BookNumber
     {
-        // TODO Add fields.
+        private readonly string code;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BookNumber"/> class with the specified 10-digit ISBN <paramref name="isbnCode"/>.
-        /// </summary>
-        /// <param name="isbnCode">A 10-digit ISBN code.</param>
-        /// <exception cref="ArgumentNullException">a code argument is null.</exception>
-        /// <exception cref="ArgumentException">a code argument is invalid or a code has wrong checksum.</exception>
-        // TODO Add constructor.
+        public BookNumber(string isbnCode)
+        {
+            if (isbnCode == null)
+            {
+                throw new ArgumentNullException(nameof(isbnCode));
+            }
 
-        /// <summary>
-        /// Gets a 10-digit ISBN code.
-        /// </summary>
-        // TODO Add property.
+            if (!ValidateCode(isbnCode) || !ValidateChecksum(isbnCode))
+            {
+                throw new ArgumentException("Invalid ISBN code.", nameof(isbnCode));
+            }
 
-        /// <summary>
-        /// Gets an <see cref="Uri"/> to the publication page on the isbnsearch.org website.
-        /// </summary>
-        /// <returns>an <see cref="Uri"/> to the publication page on the isbnsearch.org website.</returns>
-        // TODO Add method.
+            this.code = isbnCode;
+        }
 
-        /// <summary>
-        /// Returns the string that represents a current object.
-        /// </summary>
-        /// <returns>A string that represents the current object.</returns>
-        // TODO Add method.
+        public string Code => this.code;
 
-        // TODO Add method.
+        public Uri GetSearchUri()
+        {
+            string searchLink = $"https://isbnsearch.org/isbn/{this.code}";
+            return new Uri(searchLink);
+        }
 
-        // TODO Add method.
+        public override string ToString()
+        {
+            return this.code;
+        }
+
+        private static bool ValidateCode(string isbnCode)
+        {
+            if (isbnCode == null)
+            {
+                throw new ArgumentNullException(nameof(isbnCode));
+            }
+
+            if (isbnCode.Length != 10)
+            {
+                return false;
+            }
+
+            foreach (char c in isbnCode)
+            {
+                if (!char.IsDigit(c) && c != 'X')
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool ValidateChecksum(string isbnCode)
+        {
+            if (isbnCode == null)
+            {
+                throw new ArgumentNullException(nameof(isbnCode));
+            }
+
+            int checksum = 0;
+            for (int i = 0; i < isbnCode.Length; i++)
+            {
+                if (char.IsDigit(isbnCode[i]))
+                {
+#pragma warning disable CA1305
+                    checksum += (10 - i) * int.Parse(isbnCode[i].ToString());
+#pragma warning restore CA1305
+                }
+                else if (isbnCode[i] == 'X' && i == 9)
+                {
+                    checksum += 10;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return checksum % 11 == 0;
+        }
     }
 }

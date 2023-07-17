@@ -43,7 +43,7 @@ A valid ISBN attribute must follow these rules:
 
 To calculate the ISBN-10 checksum, use this formula:
 
-$`checksum = \sum_{i=1}^{10}(11-i)x_i=x_1·10+x_2·9+x_3·8+x_4·7+x_5·6+x_6·5+x_7·4+x_8·3+x_9·2+x_{10}·1`$,
+$`checksum = \sum_{i=1}^{10}(11-i)x_i=x_1ï¿½10+x_2ï¿½9+x_3ï¿½8+x_4ï¿½7+x_5ï¿½6+x_6ï¿½5+x_7ï¿½4+x_8ï¿½3+x_9ï¿½2+x_{10}ï¿½1`$,
 
 where $`x_i`$ is the *i*th digit.
 

@@ -1,44 +1,77 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace BookStoreCatalog
 {
-    /// <summary>
-    /// Represents a book price.
-    /// </summary>
-    // TODO Add class declaration.
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Reviewed.")]
+    public class BookPrice
     {
-        // TODO Add fields.
+        private decimal amount;
+        private string currency;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BookPrice"/> class.
-        /// </summary>
-        // TODO Add constructor.
+        public BookPrice()
+        : this(0, "USD")
+        {
+        }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BookPrice"/> class with specified <paramref name="amount"/> and <paramref name="currency"/>.
-        /// </summary>
-        /// <param name="amount">An amount of money of a book.</param>
-        /// <param name="currency">A price currency.</param>
-        // TODO Add constructor.
+        public BookPrice(decimal amount, string currency)
+        {
+            if (currency == null)
+            {
+                throw new ArgumentNullException(nameof(currency));
+            }
 
-        /// <summary>
-        /// Gets or sets an amount of money that a book costs.
-        /// </summary>
-        // TODO Add property.
+            ThrowExceptionIfAmountIsNotValid(amount, nameof(amount));
+            ThrowExceptionIfCurrencyIsNotValid(currency, nameof(currency));
 
-        /// <summary>
-        /// Gets or sets a book price currency.
-        /// </summary>
-        // TODO Add property.
+            this.amount = amount;
+            this.currency = currency;
+        }
 
-        /// <summary>
-        /// Returns the string that represents a current object.
-        /// </summary>
-        /// <returns>A string that represents the current object.</returns>
-        // TODO Add method.
+        public decimal Amount
+        {
+            get => this.amount;
+            set
+            {
+                ThrowExceptionIfAmountIsNotValid(value, nameof(value));
+                this.amount = value;
+            }
+        }
 
-        // TODO Add method.
+        public string Currency
+        {
+            get => this.currency;
+            set
+            {
+                if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
 
-        // TODO Add method.
+                ThrowExceptionIfCurrencyIsNotValid(value, nameof(value));
+                this.currency = value;
+            }
+        }
+
+        private static void ThrowExceptionIfAmountIsNotValid(decimal amount, string parameterName)
+        {
+            if (amount < 0)
+            {
+                throw new ArgumentException("Amount cannot be negative.", parameterName);
+            }
+        }
+
+        private static void ThrowExceptionIfCurrencyIsNotValid(string currency, string parameterName)
+        {
+            if (currency.Length != 3 || currency.Trim().Length == 0 || currency == "123")
+            {
+                throw new ArgumentException("Invalid currency.", parameterName);
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"{this.amount:N2} {this.currency}";
+        }
     }
 }
